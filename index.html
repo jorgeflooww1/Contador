@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meri Crismas</title>
+
+  <!-- Fuentes -->
+  <link href="https://fonts.cdnfonts.com/css/din-alternate" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/black-sans" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      height: 100vh;
+      padding: 30px;
+      overflow: hidden;
+      font-family: 'DIN Alternate', sans-serif;
+      background: #ffffff;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .background-image {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: url('IMG_1755.jpeg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      opacity: 0.8;
+      z-index: 0;
+    }
+
+    #music-button {
+      position: absolute;
+      top: 30px; right: 30px;
+      padding: 20px 40px;
+      background-color: rgba(0,0,0,0.7);
+      color: orange;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      z-index: 3;
+      font-size: 2rem;
+      transition: transform 0.3s ease;
+    }
+    #music-button:hover { transform: scale(1.1); }
+    .active { color: red !important; }
+
+    /* BOTÓN DE NIEVE */
+    #snow-button {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      padding: 18px 30px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 15px;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 3;
+      border: none;
+      font-family: 'Black Sans', sans-serif;
+      transition: transform .3s;
+    }
+    #snow-button:hover { transform: scale(1.1); }
+
+    /* RECUDROS ARRIBA IZQUIERDA — OPACIDAD 0.8 */
+    .top-counters {
+      position: absolute;
+      top: 30px; left: 30px;
+      display: flex;
+      gap: 20px;
+      z-index: 2;
+    }
+
+    .top-left-counter {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 15px 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .top-title { font-size: 1.5rem; margin-bottom: 5px; }
+    .top-number {
+      font-size: 2rem;
+      font-weight: bold;
+      font-family: 'Arial Rounded MT Bold';
+    }
+    .top-label {
+      font-size: 1rem;
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* CONTADOR FINES DE SEMANA — OPACIDAD 0.8 */
+    .bottom-counter {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.8);
+      padding: 15px 20px;
+      border-radius: 10px;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .bottom-title { font-size: 1.8rem; margin-bottom: 10px; }
+    .bottom-number { font-size: 2rem; font-weight: bold; }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      background: rgba(255,255,255,0.35);
+      padding: 20px;
+      border-radius: 15px;
+    }
+
+    .title, .subtitle { font-family: 'Black Sans', sans-serif; }
+    .title { font-size: 2.5rem; margin-bottom: 10px; }
+    .subtitle { font-size: 1.5rem; }
+
+    .container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .time-box { display: flex; flex-direction: column; align-items: center; }
+
+    .number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      font-family: 'Black Sans';
+    }
+
+    .label {
+      margin-top: 5px;
+      letter-spacing: 1px;
+      font-family: 'Black Sans';
+    }
+
+    /* ❄️ NIEVE NORMAL */
+    .snowflake {
+      position: absolute;
+      color: white;
+      font-size: 1.3rem;
+      pointer-events: none;
+      animation: fall linear forwards;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 2px white);
+      z-index: 1;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* 🎄 BANDERAS NAVIDEÑAS */
+    .banner {
+      position: absolute;
+      top: -20px;
+      font-size: 2rem;
+      animation: fallBanner linear forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes fallBanner {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-image"></div>
+
+  <button id="music-button">🎵 Pulsa para tener el flow</button>
+  <button id="snow-button">❄️</button>
+
+  <audio id="background-music" src="Pineapple-on-pizza.mp3" loop></audio>
+
+  <!-- CONTADORES ARRIBA -->
+  <div class="top-counters">
+    <div class="top-left-counter">
+      <div class="top-title">HAY:</div>
+      <div class="top-number" id="class-days" style="color:#9C0000;">00</div>
+      <div class="top-label">días de clase ☠️
+        (sin contar findes)</div>
+    </div>
+
+    <div class="top-left-counter">
+      <div class="top-title">HAY:</div>
+      <div class="top-number" id="exam-days" style="color:#009FCE;">00</div>
+      <div class="top-label">EXÁMENES</div>
+    </div>
+  </div>
+
+  <!-- CONTADOR PRINCIPAL -->
+  <div class="wrapper">
+    <h1 class="title">FALTAN:</h1>
+
+    <div class="container" id="countdown">
+      <div class="time-box"><div class="number" id="days">00</div><div class="label">días</div></div>
+      <div class="time-box"><div class="number" id="hours">00</div><div class="label">horas</div></div>
+      <div class="time-box"><div class="number" id="minutes">00</div><div class="label">minutos</div></div>
+      <div class="time-box"><div class="number" id="seconds">00</div><div class="label">segundos</div></div>
+    </div>
+
+    <h2 class="subtitle">PARA NAVIDAD 🎄🪅❤️</h2>
+  </div>
+
+  <!-- FINES DE SEMANA -->
+  <div class="bottom-counter">
+    <div class="bottom-title">HAY:</div>
+    <div class="bottom-number" id="weekend-days">00</div>
+    <div class="bottom-label">días sin clase</div>
+  </div>
+
+
+<script>
+/* --- CONTADORES --- */
+const countdown = () => {
+  const end = new Date("2025-12-22T14:15:00").getTime();
+  const now = Date.now();
+  const d = end - now;
+
+  document.getElementById("days").innerText = String(Math.floor(d/86400000)).padStart(2,"0");
+  document.getElementById("hours").innerText = String(Math.floor(d%86400000/3600000)).padStart(2,"0");
+  document.getElementById("minutes").innerText = String(Math.floor(d%3600000/60000)).padStart(2,"0");
+  document.getElementById("seconds").innerText = String(Math.floor(d%60000/1000)).padStart(2,"0");
+};
+setInterval(countdown,1000); countdown();
+
+const countWeekends = () => {
+  const now = new Date(); const end = new Date("2025-12-22");
+  let c=0, cur=new Date(now);
+  while(cur<=end){ if(cur.getDay()==0||cur.getDay()==6)c++; cur.setDate(cur.getDate()+1); }
+  document.getElementById("weekend-days").innerText = String(c).padStart(2,"0");
+};
+countWeekends();
+
+const countClassDays = () => {
+  const now = new Date(); const end = new Date("2025-12-22");
+  let c=0, cur=new Date(now);
+  while(cur<=end){ if(cur.getDay()!=0&&cur.getDay()!=6)c++; cur.setDate(cur.getDate()+1); }
+  document.getElementById("class-days").innerText = String(c).padStart(2,"0");
+};
+countClassDays();
+
+const countExams = () => {
+  const dates=[
+    "2025-11-27","2025-11-28","2025-12-01",
+    "2025-12-03","2025-12-05","2025-12-10","2025-12-11"
+  ];
+  const today=new Date(); today.setHours(0,0,0,0);
+  const remaining=dates.filter(d=>new Date(d)>=today).length;
+  document.getElementById("exam-days").innerText=String(remaining).padStart(2,"0");
+};
+countExams();
+
+/* --- NIEVE AL CLICK --- */
+document.addEventListener("click", (e)=>{
+  if(navigator.vibrate) navigator.vibrate(80);
+
+  const n=8;
+  for(let i=0;i<n;i++){
+    const flake=document.createElement("div");
+    flake.className="snowflake";
+    flake.innerHTML="❄️";
+    flake.style.left=e.clientX+(Math.random()*80-40)+"px";
+    flake.style.top=e.clientY+"px";
+    flake.style.fontSize=(Math.random()*1+0.7)+"rem";
+    flake.style.animationDuration=(Math.random()*2+2)+"s";
+    document.body.appendChild(flake);
+    setTimeout(()=>flake.remove(),3000);
+  }
+});
+
+/* --- BOTÓN: NIEVE MASIVA + BANDERAS --- */
+document.getElementById("snow-button").addEventListener("click",()=>{
+  const btn=document.getElementById("snow-button");
+  btn.remove(); // Se borra el botón
+
+  const banderas=["🎄","🎅","⭐","🧦","🎁","❄️"];
+
+  const intervalo = setInterval(()=>{
+    for(let i=0;i<25;i++){
+      const x=Math.random()*window.innerWidth;
+
+      const flake=document.createElement("div");
+      flake.className="snowflake";
+      flake.innerHTML="❄️";
+      flake.style.left=x+"px";
+      flake.style.animationDuration=(Math.random()*3+3)+"s";
+      flake.style.fontSize=(Math.random()*1.5+1)+"rem";
+      document.body.appendChild(flake);
+      setTimeout(()=>flake.remove(),5000);
+
+      const flag=document.createElement("div");
+      flag.className="banner";
+      flag.innerHTML=banderas[Math.floor(Math.random()*banderas.length)];
+      flag.style.left=x+"px";
+      flag.style.animationDuration=(Math.random()*4+4)+"s";
+      document.body.appendChild(flag);
+      setTimeout(()=>flag.remove(),7000);
+    }
+  },300);
+
+  setTimeout(()=>clearInterval(intervalo),15000);
+});
+
+/* MÚSICA */
+const music=document.getElementById("background-music");
+const musicBtn=document.getElementById("music-button");
+musicBtn.addEventListener("click",()=>{
+  if(music.paused){ music.play(); musicBtn.textContent="💤 no lo pares 😒😔"; }
+  else{ music.pause(); musicBtn.textContent="🎵 Pulsa para tener el flow"; }
+});
+</script>
+
+</body>
+</html> 
