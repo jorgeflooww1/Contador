@@ -21,7 +21,7 @@ body{
   position:relative;
 }
 
-/* 🌊 FONDO CON MOVIMIENTO */
+/* 🌊 FONDO ANIMADO */
 .background-image{
   position:absolute;
   width:110%;
@@ -35,6 +35,26 @@ body{
   0%{transform:scale(1) translate(0,0);}
   50%{transform:scale(1.05) translate(-10px,-10px);}
   100%{transform:scale(1.1) translate(10px,10px);}
+}
+
+/* 🎵 BOTÓN MÚSICA */
+#music-button{
+  position:absolute;
+  top:30px;
+  right:30px;
+  padding:15px 30px;
+  background:rgba(0,0,0,0.7);
+  color:#00d4ff;
+  border:none;
+  border-radius:15px;
+  cursor:pointer;
+  z-index:2;
+  font-size:1.5rem;
+  transition:transform .3s;
+}
+
+#music-button:hover{
+  transform:scale(1.1);
 }
 
 /* CAJA */
@@ -58,25 +78,26 @@ body{
   margin:20px 0;
 }
 
-/* ✨ EFECTO PRO */
+/* 💙 EFECTO VERANO (AZUL) */
 .number{
   font-size:2.8rem;
   font-weight:bold;
   font-family:'Black Sans';
   animation:pulse 1.5s infinite;
-  text-shadow:0 0 10px rgba(255,150,0,0.7);
+  color:#00bfff;
+  text-shadow:0 0 8px rgba(0,191,255,0.6);
 }
 
 @keyframes pulse{
   0%,100%{transform:scale(1);}
-  50%{transform:scale(1.15);}
+  50%{transform:scale(1.12);}
 }
 
 .label{
   font-family:'Black Sans';
 }
 
-/* EFECTO CLICK */
+/* CLICK VERANO */
 .summer{
   position:absolute;
   pointer-events:none;
@@ -88,17 +109,17 @@ body{
   100%{transform:translateY(120vh) rotate(360deg);opacity:0;}
 }
 
-/* TEXTO FINAL */
+/* FINAL */
 .final{
   font-size:2.5rem;
   font-family:'Black Sans';
-  color:#ff7b00;
+  color:#00bfff;
   animation:finalGlow 1s infinite alternate;
 }
 
 @keyframes finalGlow{
-  from{text-shadow:0 0 10px orange;}
-  to{text-shadow:0 0 25px red;}
+  from{text-shadow:0 0 10px #00bfff;}
+  to{text-shadow:0 0 25px #0077ff;}
 }
 </style>
 </head>
@@ -107,7 +128,10 @@ body{
 
 <div class="background-image"></div>
 
-<div class="wrapper" id="mainBox">
+<button id="music-button">🎵 Pulsa para tener el flow</button>
+<audio id="background-music" src="Pineapple-on-pizza.mp3" loop></audio>
+
+<div class="wrapper">
   <h1 class="title" id="title">FALTAN:</h1>
 
   <div class="container" id="countdown">
@@ -123,6 +147,7 @@ body{
 <script>
 const end = new Date("2026-06-16T14:15:00").getTime();
 
+/* CONTADOR */
 const countdown = () => {
   const now = Date.now();
   const d = end - now;
@@ -130,8 +155,9 @@ const countdown = () => {
   if(d <= 0){
     document.getElementById("countdown").innerHTML = "";
     document.getElementById("title").innerHTML = "";
-    document.getElementById("subtitle").innerHTML = "YA ES VERANO 🔥";
-    document.getElementById("subtitle").classList.add("final");
+    const sub = document.getElementById("subtitle");
+    sub.innerHTML = "YA ES VERANO 🔥";
+    sub.classList.add("final");
     return;
   }
 
@@ -144,7 +170,7 @@ const countdown = () => {
 setInterval(countdown,1000);
 countdown();
 
-/* CLICK VERANO */
+/* CLICK EFECTO */
 document.addEventListener("click",(e)=>{
   const emojis=["☀️","🌴","🍉","🏖️","🍦","😎"];
 
@@ -160,6 +186,20 @@ document.addEventListener("click",(e)=>{
 
     document.body.appendChild(el);
     setTimeout(()=>el.remove(),3000);
+  }
+});
+
+/* 🎵 MÚSICA */
+const music = document.getElementById("background-music");
+const btn = document.getElementById("music-button");
+
+btn.addEventListener("click",()=>{
+  if(music.paused){
+    music.play();
+    btn.textContent="🔊 no lo pares 😎";
+  }else{
+    music.pause();
+    btn.textContent="🎵 Pulsa para tener el flow";
   }
 });
 </script>
