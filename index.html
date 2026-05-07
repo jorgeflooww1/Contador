@@ -84,8 +84,14 @@ body{
   font-weight:bold;
   font-family:'Black Sans';
   animation:pulse 1.5s infinite;
-  color:#00bfff;
-  text-shadow:0 0 8px rgba(0,191,255,0.6);
+  color:white;
+
+  /* BORDE NEGRO */
+  -webkit-text-stroke: 2px black;
+
+  /* SOMBRA MÁS SUAVE */
+  text-shadow:
+    3px 3px 8px rgba(0,0,0,0.4);
 }
 
 @keyframes pulse{
